@@ -3,6 +3,12 @@ import dotenv from "dotenv";
 import express from "express";
 import nodemailer from "nodemailer";
 import { companyProfile } from "./data.js";
+import { spawn } from "child_process";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -151,12 +157,39 @@ app.get("/api/admin/leads", async (request, response) => {
 
 const server = app.listen(port, () => {
   console.log(`SHNOOR backend running on http://localhost:${port}`);
+
+  // Start Python Chatbot Backend
+  const pythonBackendPath = path.resolve(__dirname, "../../SHNOOR-CHATBOT/backend");
+  console.log(`Starting Python Chatbot Backend at ${pythonBackendPath}...`);
+
+  const pythonExe = path.resolve(pythonBackendPath, "venv", "Scripts", "python.exe");
+  const pythonProcess = spawn(pythonExe, ['main.py'], {
+    cwd: pythonBackendPath
+  });
+
+  pythonProcess.stdout.on('data', (data) => {
+    process.stdout.write(`[Chatbot]: ${data}`);
+  });
+
+  pythonProcess.stderr.on('data', (data) => {
+    process.stderr.write(`[Chatbot]: ${data}`);
+  });
+
+  pythonProcess.on('close', (code) => {
+    console.log(`Chatbot backend exited with code ${code}`);
+  });
+
+  app.set('pythonProcess', pythonProcess);
 });
 
 process.on('SIGINT', () => {
+  const pythonProcess = app.get('pythonProcess');
+  if (pythonProcess) pythonProcess.kill();
   server.close(() => process.exit(0));
 });
 
 process.on('SIGTERM', () => {
+  const pythonProcess = app.get('pythonProcess');
+  if (pythonProcess) pythonProcess.kill();
   server.close(() => process.exit(0));
 });

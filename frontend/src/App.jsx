@@ -13,6 +13,8 @@ import RecruitmentScamsPage from "./pages/RecruitmentScamsPage";
 import LatestOpeningsPage from "./pages/LatestOpeningsPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsConditionsPage from "./pages/TermsConditionsPage";
+import AdminLearningPage from "./pages/AdminLearningPage";
+import ChatWidget from "./components/chatbot/ChatWidget";
 
 function App() {
   return (
@@ -32,9 +34,11 @@ function App() {
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms-conditions" element={<TermsConditionsPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/admin/chatbot-learning" element={<AdminLearningPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
+      <ChatWidget />
     </CompanyProvider>
   );
 }
