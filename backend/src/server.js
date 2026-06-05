@@ -326,28 +326,39 @@ app.put("/api/admin/orders/:id/status", requireAdmin, async (req, res) => {
 const server = app.listen(port, () => {
   console.log(`SHNOOR backend running on http://localhost:${port}`);
 
-  // Start Python Chatbot Backend
+  // Start Python Chatbot Backend Gracefully
   const pythonBackendPath = path.resolve(__dirname, "../../SHNOOR-CHATBOT/backend");
-  console.log(`Starting Python Chatbot Backend at ${pythonBackendPath}...`);
+  console.log(`Attempting to start Python Chatbot Backend at ${pythonBackendPath}...`);
 
-  const pythonExe = path.resolve(pythonBackendPath, "venv", "Scripts", "python.exe");
-  const pythonProcess = spawn(pythonExe, ['main.py'], {
-    cwd: pythonBackendPath
-  });
+  const pythonExe = process.platform === "win32" 
+    ? path.resolve(pythonBackendPath, "venv", "Scripts", "python.exe")
+    : path.resolve(pythonBackendPath, "venv", "bin", "python");
 
-  pythonProcess.stdout.on('data', (data) => {
-    process.stdout.write(`[Chatbot]: ${data}`);
-  });
+  try {
+    const pythonProcess = spawn(pythonExe, ['main.py'], {
+      cwd: pythonBackendPath
+    });
 
-  pythonProcess.stderr.on('data', (data) => {
-    process.stderr.write(`[Chatbot]: ${data}`);
-  });
+    pythonProcess.stdout.on('data', (data) => {
+      process.stdout.write(`[Chatbot]: ${data}`);
+    });
 
-  pythonProcess.on('close', (code) => {
-    console.log(`Chatbot backend exited with code ${code}`);
-  });
+    pythonProcess.stderr.on('data', (data) => {
+      process.stderr.write(`[Chatbot]: ${data}`);
+    });
 
-  app.set('pythonProcess', pythonProcess);
+    pythonProcess.on('error', (error) => {
+      console.warn(`[Chatbot] Warning: Failed to start Python backend. The e-commerce site will continue running without it. Error: ${error.message}`);
+    });
+
+    pythonProcess.on('close', (code) => {
+      console.log(`Chatbot backend exited with code ${code}`);
+    });
+
+    app.set('pythonProcess', pythonProcess);
+  } catch (error) {
+    console.warn(`[Chatbot] Warning: Could not spawn python process. Continuing without Chatbot. Error: ${error.message}`);
+  }
 });
 
 process.on('SIGINT', () => {
