@@ -155,6 +155,15 @@ function StorePage() {
                       fontSize: '0.9rem',
                       background: 'white',
                       cursor: 'pointer'
+                    }}
+                  >
+                    <option value="Default">Default</option>
+                    <option value="PriceLowHigh">Price: Low to High</option>
+                    <option value="PriceHighLow">Price: High to Low</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             
             {/* Toolbar */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', background: 'white', padding: '16px 24px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
