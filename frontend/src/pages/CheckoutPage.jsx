@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStore } from '../storeContext';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://shnoor-website-62pw.onrender.com';
+const API_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.MODE === 'production' ? 'https://shnoor-website-l4pf.onrender.com' : 'http://localhost:4000');
 
 const CheckoutPage = () => {
     const { orderId } = useParams();

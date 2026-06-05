@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getUnresolvedQueries, teachBot } from '../services/chatApi';
 import { productsData as mockProducts } from '../data/products';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://shnoor-website-62pw.onrender.com';
+const API_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.MODE === 'production' ? 'https://shnoor-website-l4pf.onrender.com' : 'http://localhost:4000');
 
 const AdminLearningPage = () => {
     const [token, setToken] = useState(localStorage.getItem('adminToken') || null);

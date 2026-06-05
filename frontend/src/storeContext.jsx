@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://shnoor-website-62pw.onrender.com';
+const API_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.MODE === 'production' ? 'https://shnoor-website-l4pf.onrender.com' : 'http://localhost:4000');
 const StoreContext = createContext();
 
 export function StoreProvider({ children }) {
