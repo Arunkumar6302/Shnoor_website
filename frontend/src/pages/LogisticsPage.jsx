@@ -18,8 +18,9 @@ function LogisticsPage() {
               At SHNOOR International LLC, we simplify global trade. We provide expert dry container supply and end-to-end logistics operations from India's premier ports to international markets.
             </p>
 
-            <div style={{ display: 'flex', gap: '16px' }}>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
               <Link to="/contact" className="primary-button" style={{ padding: '12px 24px', fontSize: '0.9rem' }}>Request Logistics Support</Link>
+              <Link to="/store" className="primary-button" style={{ padding: '12px 24px', fontSize: '0.9rem', background: 'transparent', color: 'var(--navy)', border: '2px solid var(--navy)' }}>Go to Store</Link>
             </div>
           </div>
 

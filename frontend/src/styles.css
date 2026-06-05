@@ -316,6 +316,18 @@ main {
   border-left-color: var(--accent);
 }
 
+.user-menu-dropdown a {
+  color: var(--navy) !important;
+}
+
+.user-menu-dropdown a:hover {
+  background-color: #f8fafc;
+  color: var(--accent) !important;
+}
+
+.user-menu-dropdown button:hover {
+  background-color: #fef2f2;
+}
 /* Buttons */
 .nav-cta, .primary-button, .secondary-button {
   display: inline-flex;

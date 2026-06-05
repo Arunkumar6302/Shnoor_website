@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, Link } from "react-router-dom";
 import BrandLogo from "./BrandLogo";
 import { useCompany } from "../company";
+import { useStore } from "../storeContext";
 
 function Layout() {
   const { siteSettings } = useCompany();
+  const { user, login, logout } = useStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
@@ -54,7 +57,42 @@ function Layout() {
             <NavLink to="/logistics-management" onClick={closeMenu}>Logistics</NavLink>
             <NavLink to="/export-management" onClick={closeMenu}>Export</NavLink>
             <NavLink to="/careers" onClick={closeMenu}>Careers</NavLink>
-            <NavLink to="/contact" onClick={closeMenu}>Contact</NavLink>
+            
+            {/* User Dropdown */}
+            <div className="nav-dropdown" onMouseEnter={() => setIsUserMenuOpen(true)} onMouseLeave={() => setIsUserMenuOpen(false)}>
+              {!user ? (
+                <button onClick={login} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.95rem', fontWeight: 500, fontFamily: 'Inter, sans-serif', padding: '12px 0', marginLeft: '8px', transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = 'var(--accent)'} onMouseOut={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.8)'}>
+                  Login / Signup
+                </button>
+              ) : (
+                <>
+                  <button aria-label="User Menu" style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '8px', color: 'rgba(255, 255, 255, 0.8)', marginLeft: '8px' }}>
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                  </button>
+                  <div className="dropdown-menu user-menu-dropdown" style={{ display: isUserMenuOpen ? 'flex' : 'none', right: '-10px', left: 'auto', minWidth: '220px', padding: '8px 0', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', background: 'white' }}>
+                    <Link to="/orders" onClick={() => { closeMenu(); setIsUserMenuOpen(false); }} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 500 }}>
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                      My Orders
+                    </Link>
+                    <Link to="/orders" onClick={() => { closeMenu(); setIsUserMenuOpen(false); }} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 500 }}>
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                      My Receipts
+                    </Link>
+                    <Link to="#" onClick={() => { closeMenu(); setIsUserMenuOpen(false); }} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', color: 'var(--navy)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 500 }}>
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                      Profile Settings
+                    </Link>
+                    <div style={{ height: '1px', background: '#f0f0f0', margin: '4px 0' }}></div>
+                    <button onClick={() => { logout(); closeMenu(); setIsUserMenuOpen(false); }} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'none', border: 'none', width: '100%', padding: '12px 20px', textAlign: 'left', cursor: 'pointer', color: '#ef4444', fontSize: '0.95rem', fontWeight: 500 }}>
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                      Logout
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <NavLink to="/contact" className="get-in-touch-btn" onClick={closeMenu} style={{ background: 'transparent', color: 'rgba(255, 255, 255, 0.8)', padding: '10px 0', textDecoration: 'none', fontWeight: 600, marginLeft: '16px', border: 'none' }}>Get in Touch</NavLink>
           </nav>
         </header>
       </div>

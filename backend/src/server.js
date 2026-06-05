@@ -6,6 +6,9 @@ import { companyProfile } from "./data.js";
 import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { getUserByEmail, createUser, saveOrder, getOrdersByUserId, getAllOrders, updateOrderStatus } from "./db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -153,6 +156,171 @@ app.get("/api/admin/leads", async (request, response) => {
   response.json({
     message: "Lead storage is disabled. Enquiries are sent via email only."
   });
+});
+
+const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_for_local_dev_12345";
+
+// Auth routes
+app.post("/api/auth/register", async (req, res) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "Name, email, and password are required" });
+  }
+  
+  try {
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists with this email" });
+    }
+    
+    const passwordHash = await bcrypt.hash(password, 10);
+    const newUser = await createUser(name, email, passwordHash);
+    
+    const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET, { expiresIn: '7d' });
+    
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      user: { id: newUser.id, name: newUser.name, email: newUser.email }
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ message: "Server error during registration" });
+  }
+});
+
+app.post("/api/auth/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  if (email === "admin@shnoor.com" && password === "admin 123") {
+    const token = jwt.sign({ id: 'admin', email: 'admin@shnoor.com', role: 'admin' }, JWT_SECRET, { expiresIn: '7d' });
+    return res.json({
+      message: "Admin login successful",
+      token,
+      user: { id: 'admin', name: 'Admin', email: 'admin@shnoor.com', role: 'admin' }
+    });
+  }
+  
+  try {
+    const user = await getUserByEmail(email);
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    
+    const isValid = await bcrypt.compare(password, user.password_hash);
+    if (!isValid) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+    
+    res.json({
+      message: "Login successful",
+      token,
+      user: { id: user.id, name: user.name, email: user.email }
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error during login" });
+  }
+});
+
+// Middleware for auth
+const requireAuth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+// Orders routes
+app.post("/api/orders", requireAuth, async (req, res) => {
+  const { items, total } = req.body;
+  if (!items || !items.length || total === undefined) {
+    return res.status(400).json({ message: "Items and total are required" });
+  }
+  
+  try {
+    const order = await saveOrder(req.user.id, items, total);
+    res.status(201).json({ message: "Order placed successfully", order });
+  } catch (error) {
+    console.error("Order creation error:", error);
+    res.status(500).json({ message: "Server error while placing order" });
+  }
+});
+
+app.get("/api/orders", requireAuth, async (req, res) => {
+  try {
+    const orders = await getOrdersByUserId(req.user.id);
+    res.json(orders);
+  } catch (error) {
+    console.error("Fetch orders error:", error);
+    res.status(500).json({ message: "Server error while fetching orders" });
+  }
+});
+
+app.put("/api/orders/:id/pay", requireAuth, async (req, res) => {
+  try {
+    const order = await updateOrderStatus(req.params.id, 'Paid');
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    res.json({ message: "Order marked as paid successfully", order });
+  } catch (error) {
+    console.error("Payment update error:", error);
+    res.status(500).json({ message: "Server error while updating payment status" });
+  }
+});
+
+const requireAdmin = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ message: "Forbidden: Admins only" });
+    }
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+app.get("/api/admin/orders", requireAdmin, async (req, res) => {
+  try {
+    const orders = await getAllOrders();
+    res.json(orders);
+  } catch (error) {
+    console.error("Fetch all orders error:", error);
+    res.status(500).json({ message: "Server error while fetching all orders" });
+  }
+});
+
+app.put("/api/admin/orders/:id/status", requireAdmin, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await updateOrderStatus(req.params.id, status);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    res.json({ message: "Order updated successfully", order });
+  } catch (error) {
+    console.error("Update order status error:", error);
+    res.status(500).json({ message: "Server error while updating order status" });
+  }
 });
 
 const server = app.listen(port, () => {
