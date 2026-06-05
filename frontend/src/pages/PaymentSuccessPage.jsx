@@ -42,7 +42,7 @@ const PaymentSuccessPage = () => {
     if (!order) return <div style={{ padding: '100px', textAlign: 'center' }}>Loading Receipt...</div>;
 
     // Get a few random products for "You might also like"
-    const savedCatalog = localStorage.getItem('shnoor_catalog_v2');
+    const savedCatalog = localStorage.getItem('shnoor_catalog_v3');
     const catalogProducts = savedCatalog ? JSON.parse(savedCatalog) : [];
     const suggestedProducts = catalogProducts.filter(p => !order.items.find(i => i.id === p.id)).slice(0, 3);
 

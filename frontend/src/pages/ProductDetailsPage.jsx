@@ -9,7 +9,7 @@ function ProductDetailsPage() {
   const [relatedProducts, setRelatedProducts] = useState([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('shnoor_catalog_v2');
+    const saved = localStorage.getItem('shnoor_catalog_v3');
     if (saved) {
       const parsed = JSON.parse(saved);
       const found = parsed.find(p => p.id === parseInt(id) || p.id === id);
@@ -21,12 +21,15 @@ function ProductDetailsPage() {
   if (!product) return <div className="container" style={{padding: '100px 0'}}>Product not found</div>;
 
   const getImage = (p) => p.image || ({
-    "Almond Butter": "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&q=80&w=400",
-    "Morning Harvest Whole Grain Oats": "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&q=80&w=400",
-    "Aqua-Pure Moisturizing Hand Wash": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=400",
-    "Plantation Crops Assortment": "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=400",
-    "Organic Cold-Pressed Coconut Oil": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=400",
-    "Healthy Organic Cereals": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&q=80&w=400"
+    "Fresh Apple": "https://cdn.dummyjson.com/product-images/groceries/apple/1.webp",
+    "Premium Beef Steak": "https://cdn.dummyjson.com/product-images/groceries/beef-steak/1.webp",
+    "Pure Cooking Oil": "https://cdn.dummyjson.com/product-images/groceries/cooking-oil/1.webp",
+    "Crisp Cucumber": "https://cdn.dummyjson.com/product-images/groceries/cucumber/1.webp",
+    "Farm Fresh Eggs": "https://cdn.dummyjson.com/product-images/groceries/eggs/1.webp",
+    "Fresh Fish Steak": "https://cdn.dummyjson.com/product-images/groceries/fish-steak/1.webp",
+    "Pure Honey Jar": "https://cdn.dummyjson.com/product-images/groceries/honey-jar/1.webp",
+    "Vanilla Ice Cream": "https://cdn.dummyjson.com/product-images/groceries/ice-cream/1.webp",
+    "Refreshing Fruit Juice": "https://cdn.dummyjson.com/product-images/groceries/juice/1.webp"
   }[p.title] || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400");
 
   return (

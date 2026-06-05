@@ -22,7 +22,7 @@ function StorePage() {
   const { cart, addToCart, setIsCartOpen } = useStore();
 
   useEffect(() => {
-    const savedProducts = localStorage.getItem('shnoor_catalog_v2');
+    const savedProducts = localStorage.getItem('shnoor_catalog_v3');
     if (savedProducts) {
       setProductsList(JSON.parse(savedProducts));
     }
@@ -155,6 +155,27 @@ function StorePage() {
                       fontSize: '0.9rem',
                       background: 'white',
                       cursor: 'pointer'
+            
+            {/* Toolbar */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', background: 'white', padding: '16px 24px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+              <p style={{ margin: 0, color: 'var(--muted)', fontWeight: 500 }}>Showing {filteredProducts.length} results</p>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '0.9rem', color: 'var(--muted)', fontWeight: 600 }}>Sort by:</span>
+                <div style={{ position: 'relative' }}>
+                  <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    style={{
+                      appearance: 'none',
+                      padding: '10px 40px 10px 16px',
+                      borderRadius: '8px',
+                      border: '1px solid #e2e8f0',
+                      color: 'var(--navy)',
+                      fontWeight: 600,
+                      fontSize: '0.9rem',
+                      background: 'white',
+                      cursor: 'pointer'
                     }}
                   >
                     <option value="Default">Default</option>
@@ -164,10 +185,6 @@ function StorePage() {
                 </div>
               </div>
             </div>
-
-            <p style={{ fontSize: '0.9rem', color: 'var(--muted)', marginBottom: '32px' }}>
-              {filteredProducts.length} products
-            </p>
 
             {/* Products Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
@@ -184,12 +201,12 @@ function StorePage() {
                   {/* Image Area */}
                   <div style={{ position: 'relative', height: '220px', background: '#f8f8f8' }}>
                     <img src={product.image || ({
-                      "Almond Butter": "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&q=80&w=400",
-                      "Morning Harvest Whole Grain Oats": "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&q=80&w=400",
-                      "Aqua-Pure Moisturizing Hand Wash": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=400",
-                      "Plantation Crops Assortment": "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=400",
-                      "Organic Cold-Pressed Coconut Oil": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=400",
-                      "Healthy Organic Cereals": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&q=80&w=400"
+                      "Fresh Apple": "https://cdn.dummyjson.com/product-images/groceries/apple/1.webp",
+                      "Premium Beef Steak": "https://cdn.dummyjson.com/product-images/groceries/beef-steak/1.webp",
+                      "Pure Cooking Oil": "https://cdn.dummyjson.com/product-images/groceries/cooking-oil/1.webp",
+                      "Crisp Cucumber": "https://cdn.dummyjson.com/product-images/groceries/cucumber/1.webp",
+                      "Farm Fresh Eggs": "https://cdn.dummyjson.com/product-images/groceries/eggs/1.webp",
+                      "Fresh Fish Steak": "https://cdn.dummyjson.com/product-images/groceries/fish-steak/1.webp"
                     }[product.title] || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400")} alt={product.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     {product.badge && (
                       <span style={{
