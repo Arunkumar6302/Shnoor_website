@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStore } from '../storeContext';
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://shnoor-website-62pw.onrender.com';
+
 const CheckoutPage = () => {
     const { orderId } = useParams();
     const navigate = useNavigate();
@@ -23,7 +25,7 @@ const CheckoutPage = () => {
         setTimeout(async () => {
             try {
                 const token = localStorage.getItem('token');
-                const res = await fetch(`http://localhost:4000/api/orders/${order.id}/pay`, {
+                const res = await fetch(`${API_URL}/api/orders/${order.id}/pay`, {
                     method: 'PUT',
                     headers: { 
                         'Content-Type': 'application/json',

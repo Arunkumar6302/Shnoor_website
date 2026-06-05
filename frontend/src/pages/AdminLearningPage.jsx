@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getUnresolvedQueries, teachBot } from '../services/chatApi';
-
 import { productsData as mockProducts } from '../data/products';
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://shnoor-website-62pw.onrender.com';
 
 const AdminLearningPage = () => {
     const [token, setToken] = useState(localStorage.getItem('adminToken') || null);
@@ -63,7 +64,7 @@ const AdminLearningPage = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:4000/api/auth/login", {
+            const res = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: 'admin@shnoor.com', password: loginPassword })
@@ -99,7 +100,7 @@ const AdminLearningPage = () => {
 
     const fetchOrders = async () => {
         try {
-            const res = await fetch("http://localhost:4000/api/admin/orders", {
+            const res = await fetch(`${API_URL}/api/admin/orders`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.ok) {
@@ -113,7 +114,7 @@ const AdminLearningPage = () => {
 
     const updateOrderStatus = async (id, status) => {
         try {
-            const res = await fetch(`http://localhost:4000/api/admin/orders/${id}/status`, {
+            const res = await fetch(`${API_URL}/api/admin/orders/${id}/status`, {
                 method: 'PUT',
                 headers: { 
                     'Content-Type': 'application/json',

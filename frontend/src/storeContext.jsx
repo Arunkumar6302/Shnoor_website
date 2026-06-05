@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://shnoor-website-62pw.onrender.com';
 const StoreContext = createContext();
 
 export function StoreProvider({ children }) {
@@ -20,7 +21,7 @@ export function StoreProvider({ children }) {
 
   const fetchOrders = async (token) => {
     try {
-      const res = await fetch("http://localhost:4000/api/orders", {
+      const res = await fetch(`${API_URL}/api/orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -54,7 +55,7 @@ export function StoreProvider({ children }) {
 
   const loginUser = async (email, password) => {
     try {
-      const res = await fetch("http://localhost:4000/api/auth/login", {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -77,7 +78,7 @@ export function StoreProvider({ children }) {
 
   const registerUser = async (name, email, password) => {
     try {
-      const res = await fetch("http://localhost:4000/api/auth/register", {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
@@ -110,7 +111,7 @@ export function StoreProvider({ children }) {
     const token = localStorage.getItem('token');
     const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
     try {
-      const res = await fetch("http://localhost:4000/api/orders", {
+      const res = await fetch(`${API_URL}/api/orders`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
