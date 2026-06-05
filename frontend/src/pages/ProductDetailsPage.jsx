@@ -1,15 +1,33 @@
 import { useParams, Link } from "react-router-dom";
-import { productsData } from "../data/products";
 import { useStore } from "../storeContext";
+import { useState, useEffect } from "react";
 
 function ProductDetailsPage() {
   const { id } = useParams();
   const { addToCart } = useStore();
-  const product = productsData.find(p => p.id === parseInt(id));
+  const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('productsList');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      const found = parsed.find(p => p.id === parseInt(id) || p.id === id);
+      setProduct(found);
+      setRelatedProducts(parsed.filter(p => p.id !== (found ? found.id : null)).slice(0, 3));
+    }
+  }, [id]);
 
   if (!product) return <div className="container" style={{padding: '100px 0'}}>Product not found</div>;
 
-  const relatedProducts = productsData.filter(p => p.id !== product.id).slice(0, 3);
+  const getImage = (p) => p.image || ({
+    "Almond Butter": "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&q=80&w=400",
+    "Morning Harvest Whole Grain Oats": "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&q=80&w=400",
+    "Aqua-Pure Moisturizing Hand Wash": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=400",
+    "Plantation Crops Assortment": "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&q=80&w=400",
+    "Organic Cold-Pressed Coconut Oil": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=400",
+    "Healthy Organic Cereals": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&q=80&w=400"
+  }[p.title] || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400");
 
   return (
     <main style={{ background: '#ffffff', paddingBottom: '80px', paddingTop: '40px' }}>
@@ -22,7 +40,7 @@ function ProductDetailsPage() {
         {/* Product Hero */}
         <div style={{ display: 'flex', gap: '60px', flexWrap: 'wrap', alignItems: 'flex-start', marginBottom: '80px' }}>
           <div style={{ flex: '1 1 400px', background: '#f8fafc', borderRadius: '32px', padding: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <img src={product.image} alt={product.title} style={{ width: '100%', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} />
+            <img src={getImage(product)} alt={product.title} style={{ width: '100%', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} />
           </div>
           <div style={{ flex: '1 1 400px', paddingTop: '20px' }}>
             <h1 style={{ fontSize: '2.5rem', color: 'var(--navy)', marginBottom: '16px', fontWeight: 800, lineHeight: 1.2 }}>{product.title}</h1>
@@ -67,7 +85,7 @@ function ProductDetailsPage() {
           {relatedProducts.map(rel => (
             <Link key={rel.id} to={`/store/${rel.id}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', background: 'white', borderRadius: '16px', border: '1px solid #f0f0f0', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
               <div style={{ height: '200px' }}>
-                <img src={rel.image} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={getImage(rel)} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div style={{ padding: '20px' }}>
                 <h3 style={{ fontSize: '1rem', color: 'var(--navy)', margin: '0 0 8px 0', fontWeight: 700 }}>{rel.title}</h3>

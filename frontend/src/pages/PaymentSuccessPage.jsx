@@ -110,7 +110,7 @@ const PaymentSuccessPage = () => {
                     {suggestedProducts.map(p => (
                         <div key={p.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
                             <div style={{ height: '200px' }}>
-                                <img src={p.image} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={p.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400"} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                             <div style={{ padding: '20px', textAlign: 'center' }}>
                                 <h4 style={{ margin: '0 0 12px 0', color: 'var(--navy)', fontSize: '1rem', fontWeight: 700 }}>{p.title}</h4>

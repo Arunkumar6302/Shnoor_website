@@ -39,7 +39,7 @@ function CartSidebar() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {cart.map(item => (
                 <div key={item.id} style={{ display: 'flex', gap: '16px', alignItems: 'center', paddingBottom: '20px', borderBottom: '1px solid #f0f0f0' }}>
-                  <img src={item.image} alt={item.title} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
+                  <img src={item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=100"} alt={item.title} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
                   <div style={{ flex: 1 }}>
                     <h4 style={{ margin: '0 0 4px 0', fontSize: '0.95rem', color: 'var(--navy)', fontWeight: 700 }}>{item.title}</h4>
                     <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--muted)' }}>Qty: {item.qty}</p>
