@@ -9,7 +9,7 @@ function ProductDetailsPage() {
   const [relatedProducts, setRelatedProducts] = useState([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('shnoor_catalog_v3');
+    const saved = localStorage.getItem('shnoor_catalog_v4');
     if (saved) {
       const parsed = JSON.parse(saved);
       const found = parsed.find(p => p.id === parseInt(id) || p.id === id);

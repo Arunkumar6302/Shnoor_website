@@ -22,7 +22,7 @@ function StorePage() {
   const { cart, addToCart, setIsCartOpen } = useStore();
 
   useEffect(() => {
-    const savedProducts = localStorage.getItem('shnoor_catalog_v3');
+    const savedProducts = localStorage.getItem('shnoor_catalog_v4');
     if (savedProducts) {
       setProductsList(JSON.parse(savedProducts));
     }

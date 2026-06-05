@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getUnresolvedQueries, teachBot } from '../services/chatApi';
 
-const mockProducts = [
-  { id: 1, title: "Fresh Apple", price: 1.99, category: "Fruits", image: "https://cdn.dummyjson.com/product-images/groceries/apple/1.webp" },
-  { id: 2, title: "Premium Beef Steak", price: 12.99, category: "Meat", image: "https://cdn.dummyjson.com/product-images/groceries/beef-steak/1.webp" },
-  { id: 3, title: "Pure Cooking Oil", price: 4.99, category: "Pantry", image: "https://cdn.dummyjson.com/product-images/groceries/cooking-oil/1.webp" },
-  { id: 4, title: "Crisp Cucumber", price: 1.49, category: "Vegetables", image: "https://cdn.dummyjson.com/product-images/groceries/cucumber/1.webp" },
-  { id: 5, title: "Farm Fresh Eggs", price: 2.99, category: "Dairy", image: "https://cdn.dummyjson.com/product-images/groceries/eggs/1.webp" },
-  { id: 6, title: "Fresh Fish Steak", price: 14.99, category: "Seafood", image: "https://cdn.dummyjson.com/product-images/groceries/fish-steak/1.webp" },
-  { id: 7, title: "Pure Honey Jar", price: 6.99, category: "Pantry", image: "https://cdn.dummyjson.com/product-images/groceries/honey-jar/1.webp" },
-  { id: 8, title: "Vanilla Ice Cream", price: 5.49, category: "Desserts", image: "https://cdn.dummyjson.com/product-images/groceries/ice-cream/1.webp" },
-  { id: 9, title: "Refreshing Fruit Juice", price: 3.99, category: "Beverages", image: "https://cdn.dummyjson.com/product-images/groceries/juice/1.webp" },
-  { id: 10, title: "Tropical Kiwi", price: 2.49, category: "Fruits", image: "https://cdn.dummyjson.com/product-images/groceries/kiwi/1.webp" },
-  { id: 11, title: "Zesty Lemon", price: 0.79, category: "Fruits", image: "https://cdn.dummyjson.com/product-images/groceries/lemon/1.webp" },
-  { id: 12, title: "Fresh Strawberry", price: 3.99, category: "Fruits", image: "https://cdn.dummyjson.com/product-images/groceries/strawberry/1.webp" }
-];
+import { productsData as mockProducts } from '../data/products';
 
 const AdminLearningPage = () => {
     const [token, setToken] = useState(localStorage.getItem('adminToken') || null);
@@ -30,7 +17,7 @@ const AdminLearningPage = () => {
 
     // Product Management State
     const [productsList, setProductsList] = useState(() => {
-        const saved = localStorage.getItem('shnoor_catalog_v3');
+        const saved = localStorage.getItem('shnoor_catalog_v4');
         return saved ? JSON.parse(saved) : mockProducts;
     });
     const [isAddingProduct, setIsAddingProduct] = useState(false);
@@ -38,7 +25,7 @@ const AdminLearningPage = () => {
     const [productForm, setProductForm] = useState({ title: '', price: '', image: '', description: '' });
 
     useEffect(() => {
-        localStorage.setItem('shnoor_catalog_v3', JSON.stringify(productsList));
+        localStorage.setItem('shnoor_catalog_v4', JSON.stringify(productsList));
     }, [productsList]);
 
     const handleProductSubmit = (e) => {
