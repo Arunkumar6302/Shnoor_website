@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { getUnresolvedQueries, teachBot } from '../services/chatApi';
 
 const mockProducts = [
-  { id: 1, title: "Almond Butter", price: 10, category: "Groceries" },
-  { id: 2, title: "Morning Harvest Whole Grain Oats", price: 15.99, category: "Groceries" },
-  { id: 3, title: "Aqua-Pure Moisturizing Hand Wash", price: 8.99, category: "Health & Care" },
-  { id: 4, title: "Plantation Crops Assortment", price: 49.99, category: "Groceries" },
-  { id: 5, title: "Organic Cold-Pressed Coconut Oil", price: 24.50, category: "Groceries" },
-  { id: 6, title: "Healthy Organic Cereals", price: 18.25, category: "Groceries" }
+  { id: 1, title: "Premium Whole Grain Oats", price: 15.99, category: "Groceries", image: "https://image.pollinations.ai/prompt/bowl%20of%20whole%20grain%20oats%20cereal%20with%20berries?width=400&height=400&nologo=true&seed=42" },
+  { id: 2, title: "Organic Almond Butter", price: 12.50, category: "Groceries", image: "https://image.pollinations.ai/prompt/jar%20of%20organic%20almond%20butter%20on%20wooden%20table?width=400&height=400&nologo=true&seed=42" },
+  { id: 3, title: "Moisturizing Hand Wash", price: 8.99, category: "Health & Care", image: "https://image.pollinations.ai/prompt/elegant%20bottle%20of%20moisturizing%20liquid%20hand%20wash%20soap?width=400&height=400&nologo=true&seed=42" },
+  { id: 4, title: "Plantation Coffee Beans", price: 24.99, category: "Groceries", image: "https://image.pollinations.ai/prompt/roasted%20coffee%20beans%20in%20a%20burlap%20sack?width=400&height=400&nologo=true&seed=42" },
+  { id: 5, title: "Cold-Pressed Coconut Oil", price: 18.50, category: "Groceries", image: "https://image.pollinations.ai/prompt/jar%20of%20cold%20pressed%20coconut%20oil%20with%20coconuts?width=400&height=400&nologo=true&seed=42" },
+  { id: 6, title: "Healthy Organic Granola", price: 14.25, category: "Groceries", image: "https://image.pollinations.ai/prompt/bowl%20of%20healthy%20organic%20granola%20with%20nuts?width=400&height=400&nologo=true&seed=42" },
+  { id: 7, title: "Pure Natural Honey", price: 9.99, category: "Groceries", image: "https://image.pollinations.ai/prompt/glass%20jar%20of%20pure%20natural%20honey%20with%20dipper?width=400&height=400&nologo=true&seed=42" },
+  { id: 8, title: "Premium Green Tea", price: 11.50, category: "Groceries", image: "https://image.pollinations.ai/prompt/cup%20of%20premium%20green%20tea%20with%20leaves?width=400&height=400&nologo=true&seed=42" },
+  { id: 9, title: "Himalayan Pink Salt", price: 6.50, category: "Groceries", image: "https://image.pollinations.ai/prompt/himalayan%20pink%20salt%20crystals%20in%20a%20bowl?width=400&height=400&nologo=true&seed=42" },
+  { id: 10, title: "Extra Virgin Olive Oil", price: 22.00, category: "Groceries", image: "https://image.pollinations.ai/prompt/bottle%20of%20extra%20virgin%20olive%20oil%20with%20olives?width=400&height=400&nologo=true&seed=42" },
+  { id: 11, title: "Fresh Strawberries", price: 5.99, category: "Groceries", image: "https://image.pollinations.ai/prompt/basket%20of%20fresh%20red%20strawberries?width=400&height=400&nologo=true&seed=42" },
+  { id: 12, title: "Whole Wheat Pasta", price: 4.50, category: "Groceries", image: "https://image.pollinations.ai/prompt/uncooked%20whole%20wheat%20pasta%20on%20table?width=400&height=400&nologo=true&seed=42" }
 ];
 
 const AdminLearningPage = () => {
@@ -24,7 +30,7 @@ const AdminLearningPage = () => {
 
     // Product Management State
     const [productsList, setProductsList] = useState(() => {
-        const saved = localStorage.getItem('productsList');
+        const saved = localStorage.getItem('shnoor_catalog_v2');
         return saved ? JSON.parse(saved) : mockProducts;
     });
     const [isAddingProduct, setIsAddingProduct] = useState(false);
@@ -32,7 +38,7 @@ const AdminLearningPage = () => {
     const [productForm, setProductForm] = useState({ title: '', price: '', image: '', description: '' });
 
     useEffect(() => {
-        localStorage.setItem('productsList', JSON.stringify(productsList));
+        localStorage.setItem('shnoor_catalog_v2', JSON.stringify(productsList));
     }, [productsList]);
 
     const handleProductSubmit = (e) => {

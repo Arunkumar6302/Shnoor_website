@@ -42,7 +42,9 @@ const PaymentSuccessPage = () => {
     if (!order) return <div style={{ padding: '100px', textAlign: 'center' }}>Loading Receipt...</div>;
 
     // Get a few random products for "You might also like"
-    const suggestedProducts = productsData.filter(p => !order.items.find(i => i.id === p.id)).slice(0, 3);
+    const savedCatalog = localStorage.getItem('shnoor_catalog_v2');
+    const catalogProducts = savedCatalog ? JSON.parse(savedCatalog) : [];
+    const suggestedProducts = catalogProducts.filter(p => !order.items.find(i => i.id === p.id)).slice(0, 3);
 
     return (
         <div style={{ background: '#f8fafc', minHeight: '100vh', padding: '60px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

@@ -18,12 +18,17 @@ function StorePage() {
   const [activeCategory, setActiveCategory] = useState("All products");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("Default");
+  const [productsList, setProductsList] = useState(productsData);
   const { cart, addToCart, setIsCartOpen } = useStore();
 
-  const savedProducts = localStorage.getItem('productsList');
-  const baseProducts = savedProducts ? JSON.parse(savedProducts) : productsData;
+  useEffect(() => {
+    const savedProducts = localStorage.getItem('shnoor_catalog_v2');
+    if (savedProducts) {
+      setProductsList(JSON.parse(savedProducts));
+    }
+  }, []);
 
-  const filteredProducts = baseProducts.filter(product => {
+  const filteredProducts = productsList.filter(product => {
     const matchesCategory = activeCategory === "All products" || product.category === activeCategory;
     const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
